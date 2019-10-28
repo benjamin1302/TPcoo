@@ -7,7 +7,6 @@ import {
 import Order from './order.interface'
 
 export default class OrderService {
-
   public async getById(id: number) {
     const rawOrders: string = await getAsync('orders')
     const orders: Order[] | [] = JSON.parse(rawOrders) || []

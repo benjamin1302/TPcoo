@@ -12,6 +12,7 @@ import {
 
 import Order from './order.interface'
 import OrderService from './orders.services'
+import OrderBuilder from './orders.builder'
 
 
 export default class OrdersController {
@@ -19,6 +20,7 @@ export default class OrdersController {
   public pathId = '/orders/:id'
   public router = Router()
   public orderService = new OrderService()
+  public orderBuilder = new OrderBuilder()
 
   constructor() {
     this.initializeRoutes()
@@ -35,23 +37,28 @@ export default class OrdersController {
 
   public getAll = async (request: Request, response: Response) => {
     let orders: Order[] = await this.orderService.getAll()
+    for( let order of orders)
+    {
+      order = this.orderBuilder.setAnomyne(order)
+    }
     response.json(orders).status(201)
   }
 
   public getById = async (request: Request, response: Response) => {
     const id = request.params.id
     // tslint:disable-next-line: triple-equals
-    const foundOrder: Order = await this.orderService.getById(Number(id))
+    let foundOrder: Order = await this.orderService.getById(Number(id))
     if (!foundOrder) {
       return response.sendStatus(404)
     }
-
+    foundOrder = this.orderBuilder.setAnomyne(foundOrder)
     response.json(foundOrder)
   }
 
   public create = async (request: Request, response: Response) => {
     let newOrder =  await this.orderService.create(request.body)
-    response.status(201).json(newOrder)
+    let orderToPrint = this.orderBuilder.setAnomyne(newOrder)
+    response.status(201).json(orderToPrint)
   }
 
   public delete = async (request: Request, response: Response) => {
