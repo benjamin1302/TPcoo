@@ -6,7 +6,7 @@ import {
 
 import Order from './order.interface'
 
-export default class OrderService {
+export default class OrderModel {
   public async getOrders(){
     return await getAsync('orders')
   }
