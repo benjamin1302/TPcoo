@@ -6,15 +6,12 @@ import {
 
 import Order from './order.interface'
 import OrderService from './orders.services'
-import OrderBuilder from './orders.builder'
-
 
 export default class OrdersController {
   public path = '/orders'
   public pathId = '/orders/:id'
   public router = Router()
   public orderService = new OrderService()
-  public orderBuilder = new OrderBuilder()
 
   constructor() {
     this.initializeRoutes()
