@@ -1,27 +1,31 @@
-import {
-  delAsync,
-  getAsync,
-  setAsync,
-} from '../../utils/storage'
-
+import OrderBuilder from './orders.builder'
+import OrderModel from './orders.model'
 import Order from './order.interface'
 
 export default class OrderService {
+  public orderBuilder = new OrderBuilder()
+  public orderModel = new OrderModel()
+
   public async getById(id: number) {
-    const rawOrders: string = await getAsync('orders')
+    const rawOrders: string = await this.orderModel.getOrders()
     const orders: Order[] | [] = JSON.parse(rawOrders) || []
-    const foundOrder: Order = orders.find((order) => order.id == Number(id))
+    let foundOrder: Order = orders.find((order) => order.id == Number(id))
+    foundOrder = this.orderBuilder.setAnomyne(foundOrder)
     return foundOrder
   }
 
   public async getAll(){
-    const raw: string = await getAsync('orders')
+    const raw: string = await this.orderModel.getOrders()
     const orders: Order[] = JSON.parse(raw) || []
+    for( let order of orders)
+    {
+      order = this.orderBuilder.setAnomyne(order)
+    }
     return orders
   }
 
   public async create(orderInformations :Order ){
-    const rawOrders: string = await getAsync('orders')
+    const rawOrders: string = await this.orderModel.getOrders()
     const orders: Order[] | [] = JSON.parse(rawOrders) || []
 
     const sortedOrders: Order[] | [] = orders.sort((previous: any, current: any) => {
@@ -36,15 +40,15 @@ export default class OrderService {
       id: lastId + 1,
       createdAt: new Date(),
     }
-
+    const orderToPrint = this.orderBuilder.setAnomyne(orderToSave)
     const newOrders: Order[] = [...orders, orderToSave]
-    await setAsync('orders', JSON.stringify(newOrders))
+    await this.orderModel.update(JSON.stringify(newOrders))
 
-    return orderToSave
+    return orderToPrint
   }
 
   public async delete(id: number) {
-    const rawOrders: string = await getAsync('orders')
+    const rawOrders: string = await this.orderModel.getOrders()
     const orders: Order[] | [] = JSON.parse(rawOrders) || []
     // tslint:disable-next-line: triple-equals
     const orderToDelete: Order | null = orders.find((order) => order.id === Number(id))
@@ -54,12 +58,12 @@ export default class OrderService {
     }
 
     const newOrders: Order[] = orders.filter((order) => order.id !== orderToDelete.id)
-    await setAsync('orders', JSON.stringify(newOrders))
+    await this.orderModel.update(JSON.stringify(newOrders))
     return orderToDelete
   }
 
   public async update(newValues : Order, id: number) {
-    const rawOrders: string = await getAsync('orders')
+    const rawOrders: string = await this.orderModel.getOrders()
     const orders: Order[] = JSON.parse(rawOrders) || []
     var orderToUpdate
 
@@ -82,8 +86,8 @@ export default class OrderService {
       if(orders[i].id === id) {
         orders.splice(parseInt(i), 1)
         orders.push(newOrders)
-        await delAsync('orders')
-        await setAsync('orders', JSON.stringify(orders))
+        await this.orderModel.delete()
+        await this.orderModel.update(JSON.stringify(orders))
         return true
       }
     }

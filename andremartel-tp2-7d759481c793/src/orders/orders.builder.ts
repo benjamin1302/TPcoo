@@ -1,16 +1,15 @@
 import Order from './order.interface'
 
 class OrderBuilder{
-    constructor(){
-    }
+    constructor(){}
 
     /* Define all the steps needed to create a profile */
 
     setAnomyne(order: Order){
-      order.contact.firstname = "toto"
+      order.contact.firstname = "XXXXXXXXXX"
       order.contact.phone = "XXX"
       order.contact.mail = "XXX@XXX"
-      order.contact.lastname = "toto"
+      order.contact.lastname = "XXXXXXXXX"
       order.contact.billingAddress.postalCode = "00000"
       order.contact.billingAddress.city = "00000"
       order.contact.billingAddress.addressLine1 = "00000"
@@ -23,11 +22,11 @@ class OrderBuilder{
 
       order.contact.billingAddress.postalCode = "59000"
       order.contact.billingAddress.city = "LILLE"
-      order.contact.billingAddress.addressLine1 = "PAS d'addresse"
-      order.contact.billingAddress.addressLine2 = "Pas d'&ddress"
+      order.contact.billingAddress.addressLine1 = ""
+      order.contact.billingAddress.addressLine2 = ""
 
-      order.carrier.contact.firstname = "TUTU"
-      order.carrier.contact.lastname = "TUTU tutu"
+      order.carrier.contact.firstname = "XXXXX"
+      order.carrier.contact.lastname = "XXXXXXXX"
       order.carrier.contact.phone = "XXX"
       order.carrier.contact.mail = "XXX@XXX"
       order.carrier.contact.headOfficeAddress.postalCode = "00000"
